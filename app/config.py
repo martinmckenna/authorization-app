@@ -1,15 +1,18 @@
+import os
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrypt
+from dotenv import load_dotenv
 from flask_mysqldb import MySQL
 from flask_cors import CORS
-from flask import Flask
-from dotenv import load_dotenv
-import os
-
-load_dotenv()
 
 app = Flask(__name__)
+load_dotenv()
+
 USER = os.getenv("MYSQL_USER")
 PASS = os.getenv("MYSQL_PASSWORD")
 DB_NAME = os.getenv("MYSQL_DB")
+
 
 class BaseConfig:
     """Base configuration."""
@@ -18,13 +21,15 @@ class BaseConfig:
     app.config['MYSQL_DATABASE_HOST'] = 'localhost'
     app.config['MYSQL_DATABASE_PORT'] = 3306
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    SECRET_KEY = os.getenv("JWT_SECRET_KEY")
+    app.config['SECRET_KEY'] = os.getenv("JWT_SECRET_KEY")
+
 
 class ProductionConfig(BaseConfig):
     """Production configuration."""
     app.config['MYSQL_DATABASE_DB'] = DB_NAME
     app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{USER}:{PASS}@localhost:3306/{DB_NAME}'
     URL = f'mysql+pymysql://{USER}:{PASS}@localhost:3306/{DB_NAME}'
+
 
 class DevelopmentConfig(BaseConfig):
     """Development configuration."""
