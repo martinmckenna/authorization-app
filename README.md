@@ -47,3 +47,15 @@ curl --request POST \
   "python.linting.pylintArgs": ["--load-plugins", "pylint_flask_sqlalchemy", "pylint_flask"]
 }
 ```
+
+## Create MySQL User
+
+```
+$ brew install mysql
+$ brew tap homebrew/services
+$ brew services start mysql
+$ mysql -u root -p
+$ CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
+$ GRANT ALL PRIVILEGES ON * . * TO 'newuser'@'localhost';
+$ FLUSH PRIVILEGES;
+```
