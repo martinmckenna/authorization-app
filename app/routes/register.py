@@ -23,10 +23,12 @@ def register_user():
       'password'
   ]
 
+  # Check against the list of required keys and see if the user sent all them up
   missing_keys = check_missing_keys(keys, payload)
   if len(missing_keys) > 0:
     return send_400(f'Missing {missing_keys[0]} key.', missing_keys[0])
 
+  # Does this user already exist?
   maybe_user = User.query.filter_by(email=payload.get('email')).first()
 
   if not maybe_user:
