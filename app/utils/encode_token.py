@@ -9,7 +9,7 @@ def encode_auth_token(user_id, secret_key):
     """
     try:
         payload = {
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=5),
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, minutes=15),
             'iat': datetime.datetime.utcnow(),
             'sub': user_id
         }
@@ -19,6 +19,7 @@ def encode_auth_token(user_id, secret_key):
             algorithm='HS256'
         )
     except Exception as e:
+        print(e)
         return e
 
 

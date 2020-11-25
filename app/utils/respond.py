@@ -13,12 +13,18 @@ def send_200(data, location='/'):
   )
 
 
-def send_400(error="Invalid Payload", field="", location='/'):
+def send_400(errors=["Invalid Payload"], fields=[], location='/'):
   return Response(
-      json.dumps({
-          "error": error,
-          "field": field
-      }),
+      json.dumps([
+          {
+              'error': each_error,
+              'field': fields[index]
+          } if index < len(fields)
+          else {
+              'error': each_error
+          }
+          for index, each_error in enumerate(errors)
+      ]),
       status=400,
       mimetype='application/json',
       headers={
@@ -29,9 +35,9 @@ def send_400(error="Invalid Payload", field="", location='/'):
 
 def send_404(location='/'):
   return Response(
-      json.dumps({
+      json.dumps([{
           'error': 'Entity not found'
-      }),
+      }]),
       status=404,
       mimetype='application/json',
       headers={
@@ -42,9 +48,9 @@ def send_404(location='/'):
 
 def send_401(error='Unauthorized', location='/'):
   return Response(
-      json.dumps({
+      json.dumps([{
           'error': error,
-      }),
+      }]),
       status=401,
       headers={
           'location': location
