@@ -39,21 +39,23 @@ def register_user():
   if not maybe_user:
     # user doesn't exist in the DB
     try:
+
       user = User(
           email=payload.get('email'),
           username=payload.get('username'),
           password=payload.get('password'),
       )
 
+      token = encode_auth_token(user.id, app.config.get('SECRET_KEY'))
+      decoded_token = token.decode()
+
       db.session.add(user)
       db.session.commit()
-
-      token = encode_auth_token(user.id, app.config.get('SECRET_KEY'))
 
       return send_200({
           'email': payload.get('email'),
           'username': payload.get('username'),
-          'token': token.decode()
+          'token': decoded_token
       })
     except:
       return send_400(['idk man something went wrong'])
