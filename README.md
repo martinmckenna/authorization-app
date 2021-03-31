@@ -1,3 +1,7 @@
+## About
+
+Based on this guide: https://realpython.com/token-based-authentication-with-flask/
+
 ## Developing
 
 ### Set Up venv

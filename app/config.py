@@ -1,10 +1,6 @@
 import os
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv
-from flask_mysqldb import MySQL
-from flask_cors import CORS
 
 app = Flask(__name__)
 load_dotenv()
