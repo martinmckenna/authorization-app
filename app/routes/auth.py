@@ -4,6 +4,7 @@ from app.utils.check_missing_keys import check_missing_keys
 from app.utils.encode_token import encode_auth_token
 from app import bcrypt, db, app
 from app.models.users import User
+from app.models.blacklist import BlacklistToken
 from app.decorators.with_auth import with_auth
 
 auth = Blueprint('auth', __name__)
@@ -120,3 +121,18 @@ def get_profile(user):
       'username': user.username,
       'email': user.email,
   })
+
+
+@auth.route('/logout', methods=['POST'])
+@with_auth(app.config.get('SECRET_KEY'))
+def logout(user):
+  # mark the token as blacklisted
+  auth_token = request.headers['Authorization'].split(" ")[1]
+  blacklist_token = BlacklistToken(token=auth_token)
+  try:
+    # insert the token
+    db.session.add(blacklist_token)
+    db.session.commit()
+    return send_200()
+  except Exception as e:
+    return send_400()

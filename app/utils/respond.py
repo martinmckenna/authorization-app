@@ -2,7 +2,7 @@ from flask import Response, jsonify
 import json
 
 
-def send_200(data, location='/'):
+def send_200(data={}, location='/'):
   return Response(
       json.dumps(data),
       status=200,

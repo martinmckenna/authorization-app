@@ -5,6 +5,7 @@ from app.utils.respond import send_401
 from app.utils.encode_token import decode_auth_token
 
 from app.models.users import User
+from app.models.blacklist import BlacklistToken
 
 
 def with_auth(secret_key):
@@ -27,6 +28,10 @@ def with_auth(secret_key):
           return send_401(['Invalid authorization token.'])
 
         try:
+          # Abort if user is trying a blacklisted auth token
+          if BlacklistToken.check_blacklist(token):
+            return send_401('Token already revoked. Please try again.')
+
           data = decode_auth_token(token, secret_key)
 
           # if the decoded token is a string, it means it's an invalid token error

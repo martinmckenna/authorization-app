@@ -17,10 +17,7 @@ bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
 
 from app.models.users import User
-from app.models.blacklist import Blacklist
+from app.models.blacklist import BlacklistToken
 from app.routes.auth import auth
 
 app.register_blueprint(auth)
-
-db.create_all()
-# db.session.commit()
