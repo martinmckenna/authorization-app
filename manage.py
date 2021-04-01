@@ -10,8 +10,8 @@ COV = coverage.coverage(
     include='app/*',
     omit=[
         'app/tests/*',
-        'app/server/config.py',
-        'app/server/*/__init__.py'
+        'app/config.py',
+        'app/*/__init__.py'
     ]
 )
 COV.start()

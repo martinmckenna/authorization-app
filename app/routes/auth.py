@@ -47,16 +47,19 @@ def register_user():
           password=payload.get('password'),
       )
 
-      token = encode_auth_token(user.id, app.config.get('SECRET_KEY'))
-      decoded_token = token.decode()
-
       db.session.add(user)
       db.session.commit()
 
+      user_id = User.query.filter_by(email=payload.get('email')).first().id
+
+      token = encode_auth_token(user_id, app.config.get('SECRET_KEY'))
+      decoded_token = token.decode()
+
       return send_200({
-          'email': payload.get('email'),
-          'username': payload.get('username'),
-          'token': decoded_token
+          'email': user.email,
+          'username': user.username,
+          'token': decoded_token,
+          'registered_on': user.registered_on
       })
     except:
       return send_400(['idk man something went wrong'])
@@ -103,7 +106,8 @@ def login_user():
         return send_200({
             'email': maybe_user.email,
             'username': maybe_user.username,
-            'token': token.decode()
+            'token': token.decode(),
+            'registered_on': maybe_user.registered_on
         })
       else:
         return send_400(['Invalid password.'], ['password'])
@@ -120,6 +124,7 @@ def get_profile(user):
   return send_200({
       'username': user.username,
       'email': user.email,
+      'registered_on': user.registered_on
   })
 
 
@@ -134,5 +139,5 @@ def logout(user):
     db.session.add(blacklist_token)
     db.session.commit()
     return send_200()
-  except Exception as e:
+  except:
     return send_400()

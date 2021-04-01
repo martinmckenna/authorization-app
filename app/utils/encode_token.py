@@ -18,8 +18,7 @@ def encode_auth_token(user_id, secret_key):
             secret_key,
             algorithm='HS256'
         )
-    except Exception as e:
-        print(e)
+    except:
         return e
 
 
