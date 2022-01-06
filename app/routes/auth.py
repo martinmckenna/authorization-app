@@ -15,6 +15,9 @@ def register_user():
   payload = None
   try:
       payload = request.get_json()
+
+      if not payload:
+        return send_400(['Payload invalid.'])
   except:
       # payload is prob empty
       return send_400(['Payload invalid.'])
@@ -73,6 +76,9 @@ def login_user():
   payload = None
   try:
       payload = request.get_json()
+
+      if not payload:
+        return send_400(['Payload invalid.'])
   except:
       # payload is prob empty
       return send_400(['Payload invalid.'])
@@ -121,11 +127,14 @@ def login_user():
 @auth.route('/profile', methods=['GET'])
 @with_auth(app.config.get('SECRET_KEY'))
 def get_profile(user):
-  return send_200({
-      'username': user.username,
-      'email': user.email,
-      'registered_on': user.registered_on
-  })
+  if user:
+    return send_200({
+        'username': user.username,
+        'email': user.email,
+        'registered_on': user.registered_on
+    })
+  else:
+    return send_400(["User not found."])
 
 
 @auth.route('/logout', methods=['POST'])

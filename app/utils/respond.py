@@ -49,9 +49,10 @@ def send_404(location='/'):
 def send_401(error='Unauthorized', location='/'):
   return Response(
       json.dumps([{
-          'error': error,
+          'error': error
       }]),
       status=401,
+      mimetype='application/json',
       headers={
           'location': location
       }

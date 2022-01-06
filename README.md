@@ -4,10 +4,22 @@ Based on this guide: https://realpython.com/token-based-authentication-with-flas
 
 ## Developing
 
+### Install MySQL and Create MySQL User
+
+```
+$ brew install mysql
+$ brew tap homebrew/services
+$ brew services start mysql
+$ mysql -u root -p
+$ CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
+$ GRANT ALL PRIVILEGES ON * . * TO 'newuser'@'localhost';
+$ FLUSH PRIVILEGES;
+```
+
 ### Set Up venv
 
 ```
-$ python3 -m venv auth-test
+$ python3 -m venv ./
 $ source bin/activate
 $ pip install -r requirements.txt
 ```
@@ -22,6 +34,8 @@ $ flask run
 
 #### Register
 
+Creates user and returns token
+
 ```
 curl --request POST \
   --url http://localhost:5000/register \
@@ -31,6 +45,40 @@ curl --request POST \
 	"username": "marty2",
 	"password": "mypassword"
 }'
+```
+
+#### Login
+
+Logs user in and returns token
+
+```
+curl --request POST \
+  --url http://localhost:5000/register \
+  --header 'content-type: application/json' \
+  --data '{
+	"username": "marty2",
+	"password": "mypassword"
+}'
+```
+
+#### Profile
+
+Gets user's profile
+
+```
+curl --request GET \
+  --url http://localhost:5000/profile \
+  --header 'Authorization: Bearer ${TOKEN_HERE}'
+```
+
+#### Logout
+
+Blacklists the passed authorization token
+
+```
+curl --request POST \
+  --url http://localhost:5000/logout \
+  --header 'Authorization: Bearer ${TOKEN_HERE}'
 ```
 
 ## VSCode Settings
@@ -45,23 +93,14 @@ curl --request POST \
 }
 ```
 
+Workspace settings:
+
 ```json
 {
+  "editor.defaultFormatter": "ms-python.python",
   "python.pythonPath": "bin/python3",
   "python.linting.pylintArgs": ["--load-plugins", "pylint_flask_sqlalchemy", "pylint_flask"]
 }
-```
-
-## Create MySQL User
-
-```
-$ brew install mysql
-$ brew tap homebrew/services
-$ brew services start mysql
-$ mysql -u root -p
-$ CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
-$ GRANT ALL PRIVILEGES ON * . * TO 'newuser'@'localhost';
-$ FLUSH PRIVILEGES;
 ```
 
 ## Run Migrations
