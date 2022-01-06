@@ -16,8 +16,6 @@ app.config.from_object(config)
 bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
 
-from app.models.users import User
-from app.models.blacklist import BlacklistToken
 from app.routes.auth import auth
 
 app.register_blueprint(auth)

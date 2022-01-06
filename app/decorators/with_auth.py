@@ -1,6 +1,5 @@
 from flask import request
 from functools import wraps
-import jwt
 from app.utils.respond import send_401
 from app.utils.encode_token import decode_auth_token
 
