@@ -1,7 +1,7 @@
 .vscode
 include
 lib
-bin
+/bin
 .env
 **/__pycache__/**
 uwsgi-reload

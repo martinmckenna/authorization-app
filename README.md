@@ -2,6 +2,11 @@
 
 Based on this guide: https://realpython.com/token-based-authentication-with-flask/
 
+Also thanks to:
+
+https://github.com/smallwat3r/docker-nginx-gunicorn-flask-letsencrypt
+https://citizix.com/how-to-run-mysql-8-with-docker-and-docker-compose/
+
 ## Developing
 
 ### Install MySQL and Create MySQL User

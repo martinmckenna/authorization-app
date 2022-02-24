@@ -1,27 +1,47 @@
+# Flask app Dockerfile
 FROM python:3.9
 
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends \
-        libatlas-base-dev gfortran nginx supervisor
+# Install needed dependencies for our app to run.
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends \
+    gcc \
+    libffi-dev \
+    musl-dev
 
-RUN pip3 install uwsgi
+WORKDIR /opt/app
 
-COPY ./requirements.txt /project/requirements.txt
+# App non-root user
+ENV GROUP=app
+ENV USER=flask
+ENV UID=12345
+ENV GID=23456
+RUN addgroup --gid "$GID" "$GROUP" \
+  && adduser --uid "$UID" \
+    --disabled-password \
+    --gecos "" \
+    --ingroup "$GROUP" \
+    "$USER"
 
-RUN pip3 install -r /project/requirements.txt
+# Switch to the non-root user
+USER "$USER"
+ENV PATH="/home/$USER/.local/bin:${PATH}"
 
-RUN useradd --no-create-home nginx
+# Copy requirements file to our container, install, and remove
+# files to we don't need to reduce the container size
+COPY requirements.txt .
+COPY static_requirements.txt .
+RUN pip install \
+    --no-cache-dir \
+    --no-warn-script-location \
+    --user \
+    -r requirements.txt \
+    -r static_requirements.txt \
+  && find "/home/$USER/.local" \
+    \( -type d -a -name test -o -name tests \) \
+    -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
+    -exec rm -rf '{}' +
 
-RUN rm /etc/nginx/sites-enabled/default
-RUN rm -r /root/.cache
+# Copy app to container (with privileges to non-root user)
+COPY --chown=$USER:$GROUP . .
 
-COPY conf/nginx.conf /etc/nginx/
-COPY conf/flask-site-nginx.conf /etc/nginx/conf.d/
-COPY conf/uwsgi.ini /etc/uwsgi/
-COPY conf/supervisord.conf /etc/supervisor/
-
-COPY app /project/app
-
-WORKDIR /project
-
-CMD ["/usr/bin/supervisord"]
+# Gunicorn is run from the docker-compose file
