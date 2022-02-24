@@ -51,6 +51,8 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_DATABASE=${MYSQL_DB}
+    cap_add:
+      - SYS_NICE  # CAP_SYS_NICE - stops "mbind operation not permitted logs"
     healthcheck:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
       timeout: 20s
