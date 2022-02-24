@@ -52,7 +52,7 @@ $ pip install -r requirements.txt
 $ flask run
 ```
 
-## Run Migrations If Needed
+### Run Migrations If Needed
 
 ```
 $ python manage.py db init
