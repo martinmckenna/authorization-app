@@ -13,6 +13,7 @@ class User(db.Model):
     password = db.Column(db.String(255), nullable=False)
     registered_on = db.Column(db.String(255), nullable=False)
     admin = db.Column(db.Boolean, nullable=False, default=False)
+    mod = db.Column(db.Boolean, nullable=False, default=False)
 
     def __init__(self, email, username, password, admin=False, mod=False):
         self.email = email
@@ -22,3 +23,4 @@ class User(db.Model):
         self.username = username
         self.registered_on = datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
         self.admin = admin
+        self.mod = mod

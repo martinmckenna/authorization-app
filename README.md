@@ -7,6 +7,19 @@ Also thanks to:
 https://github.com/smallwat3r/docker-nginx-gunicorn-flask-letsencrypt
 https://citizix.com/how-to-run-mysql-8-with-docker-and-docker-compose/
 
+## Deploying
+
+### Start Docker Containers and Init Database
+
+```
+$ touch .env // fill this file out
+$ make dc-start
+```
+
+This will start a Docker container for Nginx, the app, and MYSQL and create an initial
+database with the tables. It will also run database migrations committed to git history
+if the container is being restarted.
+
 ## Developing
 
 ### Install MySQL and Create MySQL User
@@ -21,7 +34,11 @@ $ GRANT ALL PRIVILEGES ON * . * TO 'newuser'@'localhost';
 $ FLUSH PRIVILEGES;
 ```
 
-### Set Up venv
+### Edit `.env` File
+
+Edit the `.env` file with the variables you want like DB name, user, etc.
+
+### Set Up venv and Install Requirements
 
 ```
 $ python3 -m venv ./
@@ -33,6 +50,15 @@ $ pip install -r requirements.txt
 
 ```
 $ flask run
+```
+
+## Run Migrations If Needed
+
+```
+$ python manage.py db init
+$ python manage.py db stamp heads
+$ python manage.py db migrate
+$ python manage.py db upgrade
 ```
 
 ### Endpoints
@@ -106,12 +132,4 @@ Workspace settings:
   "python.pythonPath": "bin/python3",
   "python.linting.pylintArgs": ["--load-plugins", "pylint_flask_sqlalchemy", "pylint_flask"]
 }
-```
-
-## Run Migrations
-
-```
-$ python manage.py create_db
-$ python manage.py db init
-$ python manage.py db migrate
 ```
