@@ -6,6 +6,8 @@ Also thanks to:
 
 https://github.com/smallwat3r/docker-nginx-gunicorn-flask-letsencrypt
 https://citizix.com/how-to-run-mysql-8-with-docker-and-docker-compose/
+https://nullonerror.org/2021/11/12/gunicorn-hot-reload-with-docker-compose/
+https://stackoverflow.com/questions/43133670/getting-docker-container-id-in-makefile-to-use-in-another-command
 
 ## Deploying
 
@@ -20,7 +22,33 @@ This will start a Docker container for Nginx, the app, and MYSQL and create an i
 database with the tables. It will also run database migrations committed to git history
 if the container is being restarted.
 
-## Developing
+## Developing w/ Docker (Preferred)
+
+### Edit `.env` File
+
+Edit the `.env` file with the variables you want like DB name, user, etc.
+
+### Start Containers and Database
+
+Start containers and init database with
+
+```
+$ make dc-start-local
+```
+
+This will start a Docker container for the MYSQL instance and the application being served by Gunicorn. If you passed the `--reload` flag in your `.env` file, it will also hot reload the app when making changes to the directory without having to restart the container.
+
+### Running Migrations
+
+To run migrations after making DB changes (with the containers running):
+
+```
+make dc-migrate
+```
+
+This will `exec` into the Docker container and run the migrations. The `./migrations` directory is mounted as a volume so whatever migrations that are published to the container will reflect on your local machine.
+
+## Developing w/out Docker and Instead w/ `venv`
 
 ### Install MySQL and Create MySQL User
 

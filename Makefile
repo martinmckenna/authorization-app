@@ -19,3 +19,7 @@ dc-start-local: dc-stop dc-build ## Start docker for local dev (w/o nginx)
 
 dc-build:
 	@docker-compose build;
+
+dc-migrate:
+	uuid=$$(docker-compose ps -q application); \
+	sudo docker exec "$$uuid" scripts/run_migrations.sh

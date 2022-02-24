@@ -29,8 +29,12 @@ services:
     environment:
       - FLASK_ENV=${FLASK_ENV}
       - FLASK_APP=${FLASK_APP}
+      - GUNICORN_OPTIONS=${GUNICORN_OPTIONS}
     ports:
       - 5000:5000
+    volumes:
+      - ./migrations:/opt/app/migrations
+      - ./app:/opt/app/app
     depends_on:
       mysql:
         condition: service_healthy
