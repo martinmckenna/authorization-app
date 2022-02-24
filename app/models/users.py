@@ -14,7 +14,7 @@ class User(db.Model):
     registered_on = db.Column(db.String(255), nullable=False)
     admin = db.Column(db.Boolean, nullable=False, default=False)
 
-    def __init__(self, email, username, password, admin=False):
+    def __init__(self, email, username, password, admin=False, mod=False):
         self.email = email
         self.password = bcrypt.generate_password_hash(
             password, app.config.get('BCRYPT_LOG_ROUNDS')

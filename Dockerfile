@@ -10,6 +10,9 @@ RUN apt-get update \
 
 WORKDIR /opt/app
 
+COPY app_entrypoint.sh /app_entrypoint.sh
+RUN chmod +x /app_entrypoint.sh
+
 # App non-root user
 ENV GROUP=app
 ENV USER=flask
@@ -41,7 +44,9 @@ RUN pip install \
     -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
     -exec rm -rf '{}' +
 
+
 # Copy app to container (with privileges to non-root user)
 COPY --chown=$USER:$GROUP . .
 
 # Gunicorn is run from the docker-compose file
+ENTRYPOINT /app_entrypoint.sh $FLASK_APP

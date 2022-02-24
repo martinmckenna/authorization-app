@@ -26,9 +26,9 @@ services:
 
   application:
     build: ./${APP_FOLDER}
-    command: gunicorn --bind 0.0.0.0:5000 --workers 3 ${FLASK_APP}:app
     environment:
       - FLASK_ENV=${FLASK_ENV}
+      - FLASK_APP=${FLASK_APP}
     ports:
       - 5000:5000
     depends_on:

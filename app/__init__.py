@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import inspect
 from flask_bcrypt import Bcrypt
 from app.config import app, DevelopmentConfig, ProductionConfig
-from sqlalchemy_utils import create_database, database_exists, get_tables
+from sqlalchemy_utils import create_database, database_exists
 
 config = DevelopmentConfig if os.environ.get(
     'FLASK_ENV') == 'development' else ProductionConfig
